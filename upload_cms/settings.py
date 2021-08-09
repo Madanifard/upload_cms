@@ -113,6 +113,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+# https://jpadilla.github.io/django-rest-framework-jwt/
+# part Additional Settings for add another settings
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
