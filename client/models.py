@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Information(models.Model):
-    user_id = models.OneToOneField(User, on_delete=CASCADE, related_name='user_information')
+    user = models.OneToOneField(User, on_delete=CASCADE, related_name='user_information')
     national_code = models.CharField(max_length=50)
     avatar = models.ImageField(upload_to='avatars')
     nationality = models.CharField(max_length=50)
@@ -13,7 +13,7 @@ class Information(models.Model):
 
 
 class Mobiles(models.Model):
-    user_id = models.ForeignKey(User, related_name='user_mobile', on_delete=CASCADE)
+    user = models.ForeignKey(User, related_name='user_mobile', on_delete=CASCADE)
     mobile = models.CharField(max_length=30)
     sms_code = models.CharField(max_length=10, blank=True, default=None)
     date_sent = models.DateTimeField(blank=True, default=None)
@@ -22,7 +22,7 @@ class Mobiles(models.Model):
 
 
 class Address(models.Model):
-    user_id = models.ForeignKey(User, related_name='user_address', on_delete=CASCADE)
+    user = models.ForeignKey(User, related_name='user_address', on_delete=CASCADE)
     directions = models.CharField(max_length=151)
     postal_code = models.CharField(max_length=50)
     phone = models.CharField(max_length=30)
@@ -31,6 +31,6 @@ class Address(models.Model):
 
 
 class SecurityQuestions(models.Model):
-    user_id = models.ForeignKey(User, related_name='user_security_questions', on_delete=CASCADE)
+    user = models.ForeignKey(User, related_name='user_security_questions', on_delete=CASCADE)
     question = models.TextField()
     answer = models.TextField()

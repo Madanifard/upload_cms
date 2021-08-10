@@ -7,4 +7,5 @@ urlpatterns = [
     path('token_auth', obtain_jwt_token),
     path('token_refresh', refresh_jwt_token),
     path('token_verify', verify_jwt_token),
+    path('security_questions', views.SecurityQuestions.as_view())
 ]
