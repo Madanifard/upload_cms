@@ -31,10 +31,3 @@ class SecurityQuestions(APIView):
             return Response(my_response.message_response('successful add security question'), status=status.HTTP_200_OK)
         else:
             return Response(questions_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class RefreshPassword(APIView):
-#     def get(self):
-#         pass
-#
-#     def put(self, request):
-#         pass
