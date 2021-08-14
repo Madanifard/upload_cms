@@ -1,4 +1,4 @@
-from .models import SecurityQuestions, Information
+from .models import SecurityQuestions, Information, Mobiles
 
 
 def get_user_security_questions(user_id):
@@ -29,3 +29,6 @@ def get_user_information(user_id):
 
     finally:
         return output
+
+def get_list_user_mobile(user_id):
+    return Mobiles.objects.filter(user_id=user_id)
