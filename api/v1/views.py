@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from api import my_response
+
 from . import serializers
 from client import queries as client_queries
 from api.my_response import message_response
@@ -92,3 +94,49 @@ class UserMobileDetail(APIView):
                 return Response(mobile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(message_response(mobile['message']), status=status.HTTP_404_NOT_FOUND)
+
+
+class UserAddress(APIView):
+    def get(self, request):
+        addresses = client_queries.get_list_user_address(request.user.id)
+        addresses_serializer = serializers.UserAddressSerializer(
+            addresses, many=True)
+        return Response(addresses_serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        request.data['user'] = request.user.id
+        address_serializer = serializers.UserAddressSerializer(
+            data=request.data)
+        if address_serializer.is_valid():
+            address_serializer.save()
+            return Response(address_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserAddressDetail(APIView):
+    def get_address(self, user_id, address_id):
+        return client_queries.get_user_address(user_id=user_id, address_id=address_id)
+
+    def get(self, request, pk):
+        addresses = self.get_address(user_id=request.user.id, address_id=pk)
+        if addresses['status']:
+            address_serializer = serializers.UserAddressSerializer(
+                addresses['address'])
+            return Response(address_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(message_response(addresses['message']), status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        request.data['user'] = request.user.id
+        addresses = self.get_address(user_id=request.user.id, address_id=pk)
+        if addresses['status']:
+            address_serializer = serializers.UserAddressSerializer(
+                addresses['address'], data=request.data)
+            if address_serializer.is_valid():
+                address_serializer.save()
+                return Response(address_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(message_response(addresses['message']), status=status.HTTP_404_NOT_FOUND)

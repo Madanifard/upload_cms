@@ -1,4 +1,4 @@
-from .models import SecurityQuestions, Information, Mobiles
+from .models import Address, SecurityQuestions, Information, Mobiles
 
 
 def get_user_security_questions(user_id):
@@ -46,6 +46,26 @@ def get_user_mobile(user_id, mobile_id):
         output = {
             'status': False,
             'message': "not found Data"
+        }
+    finally:
+        return output
+
+
+def get_list_user_address(user_id):
+    return Address.objects.filter(user_id=user_id)
+
+
+def get_user_address(user_id, address_id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'address': Address.objects.get(user_id=user_id, id=address_id)
+        }
+    except:
+        output = {
+            'status': False,
+            'message': "data not found"
         }
     finally:
         return output

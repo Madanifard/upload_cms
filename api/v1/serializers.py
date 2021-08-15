@@ -1,7 +1,7 @@
 from django.db.models import fields
 from rest_framework import serializers
 from client import models
-from client.models import Information, Mobiles
+from client.models import Information, Mobiles, Address
 import random
 from datetime import datetime
 
@@ -31,3 +31,9 @@ class UserMobileSerializers(serializers.ModelSerializer):
         instance.date_sent = datetime.today()
         instance.save()
         return instance
+
+
+class UserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
