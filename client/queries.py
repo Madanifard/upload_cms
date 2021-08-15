@@ -30,5 +30,22 @@ def get_user_information(user_id):
     finally:
         return output
 
+
 def get_list_user_mobile(user_id):
     return Mobiles.objects.filter(user_id=user_id)
+
+
+def get_user_mobile(user_id, mobile_id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'mobile': Mobiles.objects.get(user_id=user_id, id=mobile_id)
+        }
+    except:
+        output = {
+            'status': False,
+            'message': "not found Data"
+        }
+    finally:
+        return output

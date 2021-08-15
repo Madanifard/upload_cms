@@ -54,12 +54,41 @@ class UserMobile(APIView):
         mobile_serializer = serializers.UserMobileSerializers(
             user_mobiles, many=True)
         return Response(mobile_serializer.data, status=status.HTTP_200_OK)
-    
+
     def post(self, request):
         request.data['user'] = request.user.id
-        mobile_serializer = serializers.UserMobileSerializers(data=request.data)
+        mobile_serializer = serializers.UserMobileSerializers(
+            data=request.data)
         if mobile_serializer.is_valid():
             mobile_serializer.save()
             return Response(mobile_serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(mobile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserMobileDetail(APIView):
+    def get_mobile(self, user_id, mobile_id):
+        return client_queries.get_user_mobile(user_id, mobile_id)
+
+    def get(self, request, pk):
+        mobile = self.get_mobile(request.user.id, pk)
+        if mobile['status']:
+            mobile_serializer = serializers.UserMobileSerializers(
+                mobile['mobile'])
+            return Response(mobile_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(message_response(mobile['message']), status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, pk):
+        request.data['user'] = request.user.id
+        mobile = self.get_mobile(user_id=request.user.id, mobile_id=pk)
+        if mobile['status']:
+            mobile_serializer = serializers.UserMobileSerializers(
+                mobile['mobile'], data=request.data)
+            if mobile_serializer.is_valid():
+                mobile_serializer.save()
+                return Response(mobile_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(mobile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(message_response(mobile['message']), status=status.HTTP_404_NOT_FOUND)

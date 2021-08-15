@@ -11,11 +11,12 @@ class UserInformationSerializers(serializers.ModelSerializer):
         model = Information
         fields = '__all__'
 
+
 class UserMobileSerializers(serializers.ModelSerializer):
     class Meta:
         model = Mobiles
         fields = '__all__'
-    
+
     def create(self, validated_data):
         return Mobiles.objects.create(
             user=validated_data['user'],
@@ -23,3 +24,10 @@ class UserMobileSerializers(serializers.ModelSerializer):
             sms_code=random.sample(range(1111, 9999), 1)[0],
             date_sent=datetime.today(),
         )
+
+    def update(self, instance, validated_data):
+        instance.mobile = validated_data.get('mobile', instance.mobile)
+        instance.sms_code = random.sample(range(1111, 9999), 1)[0]
+        instance.date_sent = datetime.today()
+        instance.save()
+        return instance
