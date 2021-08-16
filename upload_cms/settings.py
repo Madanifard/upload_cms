@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'client',
     'rest_framework',
     'api',
+    'content'
 ]
 
 MIDDLEWARE = [
