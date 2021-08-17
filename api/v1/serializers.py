@@ -1,9 +1,9 @@
 from django.db.models import fields
 from rest_framework import serializers
-from client import models
-from client.models import Information, Mobiles, Address
 import random
 from datetime import datetime
+from client.models import Information, Mobiles, Address
+from content.models import Post
 
 
 class UserInformationSerializers(serializers.ModelSerializer):
@@ -36,4 +36,10 @@ class UserMobileSerializers(serializers.ModelSerializer):
 class UserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
+        fields = '__all__'
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        models = Post
         fields = '__all__'

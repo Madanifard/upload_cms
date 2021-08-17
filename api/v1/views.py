@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 
 from api import my_response
+import content
 
 from . import serializers
 from client import queries as client_queries
+from content import queries as conetnt_queries
 from api.my_response import message_response
 
 
@@ -140,3 +143,22 @@ class UserAddressDetail(APIView):
                 return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(message_response(addresses['message']), status=status.HTTP_404_NOT_FOUND)
+
+
+class PostViewSet(viewsets.ViewSet):
+
+    # @action(methods=['post'], detail=False, url_path='favorite_posts/(?P<user_id>\d+)', url_name='favorite-posts')
+    @action(methods=['get'], detail=False, url_path='user/list', name='post_user_list', url_name='post_user_list')
+    def post_user_list(self, request):
+        list_post = conetnt_queries.get_user_list_post(request.user.id)
+        list_post_serializer = serializers.PostSerializer(list_post, many=True)
+        return Response(list_post_serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='user/create', name='post_user_create', url_name='post_user_create')
+    def post_user_create(self, request):
+        post_serializer = serializers.PostSerializer(data=request.data)
+        if post_serializer.is_valid():
+            post_serializer.save()
+            return Response(post_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
