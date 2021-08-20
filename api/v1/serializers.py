@@ -3,8 +3,9 @@ from django.db.models import fields
 from rest_framework import serializers
 import random
 from datetime import datetime
+from client import models
 from client.models import Information, Mobiles, Address
-from content.models import Post
+from content.models import Post, PostComment
 from drf_extra_fields.fields import Base64ImageField
 
 
@@ -53,3 +54,9 @@ class PostSerializer(serializers.ModelSerializer):
             os.remove(instance.image.path)
 
         return super().update(instance, validated_data)
+
+
+class PostCommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostComment
+        fields = '__all__'

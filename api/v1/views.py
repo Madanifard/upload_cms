@@ -178,3 +178,45 @@ class PostViewSet(viewsets.ViewSet):
                 return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(post['message'], status=status.HTTP_404_NOT_FOUND)
+
+
+class PostCommentViewSet(viewsets.ViewSet):
+
+    @action(methods=['get'], detail=False, url_path='list/(?P<post_id>\d+)', name='post_comments', url_name='post_comments')
+    def post_comments(self, request, post_id):
+        comments = conetnt_queries.get_comment_post(post_id)
+        comments_serializer = serializers.PostCommentsSerializer(
+            comments, many=True)
+        return Response(comments_serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['post'], detail=False, url_path='create/(?P<post_id>\d+)', name='post_comment_create', url_name='post_comment_create')
+    def post_comment_create(self, request, post_id):
+        exists_post = conetnt_queries.check_exits_post(id=post_id)
+        if exists_post:
+            request.data['post'] = post_id
+            comment_serializer = serializers.PostCommentsSerializer(
+                data=request.data)
+            if comment_serializer.is_valid():
+                comment_serializer.save()
+                return Response(comment_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(message_response("not found data"), status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=['post'], detail=False, url_path='(?P<post_id>\d+)/replay/(?P<comment_id>\d+)', name='post_comment_replay', url_name='post_comment_replay')
+    def post_comment_replay(self, request, post_id, comment_id):
+        exists_post = conetnt_queries.check_exists_comment_post(
+            post_id=post_id, comment_id=comment_id)
+        if exists_post:
+            request.data['post'] = post_id
+            request.data['replay_id'] = comment_id
+            replay_comment_serializer = serializers.PostCommentsSerializer(
+                data=request.data)
+            if replay_comment_serializer.is_valid():
+                replay_comment_serializer.save()
+                return Response(replay_comment_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(replay_comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(message_response("not found data"), status=status.HTTP_404_NOT_FOUND)
