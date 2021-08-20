@@ -156,6 +156,7 @@ class PostViewSet(viewsets.ViewSet):
 
     @action(methods=['post'], detail=False, url_path='user/create', name='post_user_create', url_name='post_user_create')
     def post_user_create(self, request):
+        request.data['user'] = request.user.id
         post_serializer = serializers.PostSerializer(data=request.data)
         if post_serializer.is_valid():
             post_serializer.save()

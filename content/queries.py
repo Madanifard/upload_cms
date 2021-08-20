@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from models import Post
+from .models import Post
 
 
 def get_user_list_post(user_id):

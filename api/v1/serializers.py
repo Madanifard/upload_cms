@@ -4,6 +4,7 @@ import random
 from datetime import datetime
 from client.models import Information, Mobiles, Address
 from content.models import Post
+from drf_extra_fields.fields import Base64ImageField
 
 
 class UserInformationSerializers(serializers.ModelSerializer):
@@ -40,6 +41,8 @@ class UserAddressSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()  # pip install django-extra-fields
+
     class Meta:
-        models = Post
+        model = Post
         fields = '__all__'
