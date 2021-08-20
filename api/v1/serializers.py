@@ -1,3 +1,4 @@
+import os
 from django.db.models import fields
 from rest_framework import serializers
 import random
@@ -41,8 +42,14 @@ class UserAddressSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()  # pip install django-extra-fields
+    image = Base64ImageField(required=False)  # pip install django-extra-fields
 
     class Meta:
         model = Post
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+        if 'image' in validated_data:
+            os.remove(instance.image.path)
+
+        return super().update(instance, validated_data)

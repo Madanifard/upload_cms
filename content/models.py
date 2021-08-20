@@ -10,7 +10,7 @@ class Post(models.Model):
     text = models.TextField()
     descripe_seo = models.CharField(max_length=300)
     key_word_seo = models.TextField()
-    image = models.ImageField(upload_to='avatars')
+    image = models.ImageField(upload_to='posts')
     showable = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True)

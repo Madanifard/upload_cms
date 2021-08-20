@@ -147,7 +147,6 @@ class UserAddressDetail(APIView):
 
 class PostViewSet(viewsets.ViewSet):
 
-    # @action(methods=['post'], detail=False, url_path='favorite_posts/(?P<user_id>\d+)', url_name='favorite-posts')
     @action(methods=['get'], detail=False, url_path='user/list', name='post_user_list', url_name='post_user_list')
     def post_user_list(self, request):
         list_post = conetnt_queries.get_user_list_post(request.user.id)
@@ -163,3 +162,19 @@ class PostViewSet(viewsets.ViewSet):
             return Response(post_serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['PUT'], detail=False, url_path='user/update/(?P<pk>\d+)', name='post_user_update', url_name='post_user_update')
+    def post_user_update(self, request, pk):
+        request.data['user'] = request.user.id
+        post = conetnt_queries.get_user_post(
+            user_id=request.user.id, post_id=pk)
+        if post['status']:
+            post_serializer = serializers.PostSerializer(
+                post['post'], data=request.data)
+            if post_serializer.is_valid():
+                post_serializer.save()
+                return Response(post_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(post['message'], status=status.HTTP_404_NOT_FOUND)
