@@ -4,31 +4,26 @@ from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
 
-class TokenSettings:
-    jwt_data = {
-        'username': 'AmirAPITest',
-        'password': 'Amir123Test'
-    }
-    token = 'token generated'
-    user_id = 0
-
-    def create_user(self):
-        user = User.objects.create_user(username=self.jwt_data['username'], password=self.jwt_data['password'])
-        self.user_id = user.id
-
 
 class ApiVersion1Test(TestCase):
 
-    def setUp(self):
-        self.token_obj = TokenSettings()
-        self.token_obj.create_user()
+    def create_user(self, user_data):
+        user = User.objects.create_user(
+            username=user_data['username'],
+            password=user_data['password'])
 
+    def setUp(self):
         self.client = APIClient()
+        
+        self.jwt_data = {
+            'username': 'AmirAPITest',
+            'password': 'Amir123Test'
+        }
+        self.create_user(self.jwt_data)
+        self.token = 'token generated'
 
     def test_jwt_token(self):
         url = reverse('token_auth')
-        response = self.client.post(
-            url, data=self.token_obj.jwt_data, format='json')
+        response = self.client.post(url, data=self.jwt_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        self.token_obj.token = response.data['token']
-
+        self.token = response.data['token']
