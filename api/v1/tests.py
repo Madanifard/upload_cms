@@ -225,3 +225,25 @@ class UserPostTest(APITestCase):
         url = reverse('post-post_user_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        # GET get the all comment in post
+        url = reverse('post_comment-post_comments', kwargs={'post_id': post_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        #POST create the Comment on post
+        url = reverse('post_comment-post_comment_create', kwargs={'post_id': post_id})
+        comment_data = {
+            "subject" : "subject 1",
+            "email" : "a@a.com",
+            "name" : "Mr.Comment",
+            "text" : "text 1",
+        }
+        response = self.client.post(url, data=comment_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        comment_id = response.data['id']
+
+        # POST replay the comment
+        url = reverse('post_comment-post_comment_replay', kwargs={'post_id': post_id, 'comment_id': comment_id})
+        response = self.client.post(url, data=comment_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
