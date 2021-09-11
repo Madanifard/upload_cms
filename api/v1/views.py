@@ -28,17 +28,22 @@ class UserInformation(APIView):
             return Response(message_response(user_information['message']), status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
+        request.data._mutable = True
         request.data['user'] = request.user.id
+        request.data._mutable = False
+        user_information = self.find_user_information(request.user.id)
         if 'mode' in request.data.keys() and request.data['mode'] == "INSERT":
-            information = serializers.UserInformationSerializers(
-                data=request.data)
-            if information.is_valid():
-                information.save()
-                return Response(information.data, status=status.HTTP_200_OK)
+            if user_information['status'] == False:
+                information = serializers.UserInformationSerializers(
+                    data=request.data)
+                if information.is_valid():
+                    information.save()
+                    return Response(information.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(information.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response(information.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(message_response('Not for the second time'), status=status.HTTP_304_NOT_MODIFIED)
         elif 'mode' in request.data.keys() and request.data['mode'] == "UPDATE":
-            user_information = self.find_user_information(request.user.id)
             if user_information['status']:
                 information = serializers.UserInformationSerializers(
                     user_information['information'], data=request.data)
