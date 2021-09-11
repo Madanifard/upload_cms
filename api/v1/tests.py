@@ -10,6 +10,7 @@ from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
+from api.v1.base46_image_sample import image_base64
 
 
 class UserInformationTest(TestCase):
@@ -76,10 +77,6 @@ class UserInformationTest(TestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
-
-
-
-
 class UserMobileTest(TestCase):
     def create_user(self, user_data):
         User.objects.create_user(
@@ -129,7 +126,7 @@ class UserMobileTest(TestCase):
         response = self.client.put(url, data=mobile_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
-class UserAddress(APITestCase):
+class UserAddressTest(APITestCase):
 
     def create_user(self, user_data):
         User.objects.create_user(
@@ -181,4 +178,50 @@ class UserAddress(APITestCase):
         response = self.client.put(url, data=address_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
+class UserPostTest(APITestCase):
+    def create_user(self, user_data):
+        User.objects.create_user(
+            username=user_data['username'],
+            password=user_data['password'])
+    def setUp(self):
+        self.client = APIClient()
 
+        self.jwt_data = {
+            'username': 'AmirAPITest',
+            'password': 'Amir123Test',
+        }
+        self.create_user(self.jwt_data)
+    
+    def test_post(self):
+        # generate token
+        url = reverse('token_auth')
+        response = self.client.post(url, data=self.jwt_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        token = response.data['token']
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+        #POST user create post
+        url = reverse('post-post_user_create')
+        data_post = {
+            "title": "title 33",
+            "summery": "summery 33",
+            "text": "text 33",
+            "descripe_seo": "descripe_seo 33",
+            "key_word_seo": "key_word_seo 33",
+            "showable": "True",
+            "image": image_base64
+        }
+        response = self.client.post(url, data=data_post, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        post_id = response.data['id']
+
+        # PUT update user post
+        url = reverse('post-post_user_update', kwargs={'pk': post_id})
+        response = self.client.put(url, data=data_post, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        #GET get the list of posts
+        url = reverse('post-post_user_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
