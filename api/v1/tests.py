@@ -1,3 +1,4 @@
+import client
 import datetime
 from django.test.utils import override_settings
 from django.utils import timezone
@@ -5,7 +6,7 @@ import io
 from PIL import Image
 from django.conf import settings
 from django.test import TestCase
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
@@ -127,4 +128,57 @@ class UserMobileTest(TestCase):
         url = reverse('v1_user_mobile_detail', kwargs={'pk':mobile_id})
         response = self.client.put(url, data=mobile_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        
+
+class UserAddress(APITestCase):
+
+    def create_user(self, user_data):
+        User.objects.create_user(
+            username=user_data['username'],
+            password=user_data['password'])
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.jwt_data = {
+            'username': 'AmirAPITest',
+            'password': 'Amir123Test',
+        }
+        self.create_user(self.jwt_data)
+    
+    def test_user_address(self):
+        # generate token
+        url = reverse('token_auth')
+        response = self.client.post(url, data=self.jwt_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        token = response.data['token']
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+        # POST create the new address
+        url = reverse('v1_user_address')
+        address_data = {
+            "directions": "address directions2",
+            "postal_code": "12345612",
+            "phone": "+9855002230025812",
+            "latitude": "35.719889",
+            "longitude": "51.468056",
+            "user": "100"
+        }
+        response = self.client.post(url, data=address_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        address_id = response.data['id']
+
+        # GET get list of address
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        # GET get the one 
+        url = reverse('v1_user_address_detail', kwargs={'pk': address_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        # PUT update the address info
+        response = self.client.put(url, data=address_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+
