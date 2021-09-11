@@ -1,5 +1,9 @@
+import datetime
+from django.test.utils import override_settings
+from django.utils import timezone
 import io
 from PIL import Image
+from django.conf import settings
 from django.test import TestCase
 from rest_framework.test import APIClient
 from django.urls import reverse
@@ -38,6 +42,8 @@ class UserInformationTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         token = response.data['token']
 
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
         # POST - create new information
         url = reverse('v1_user_information')
         avatar = self.generate_photo_file()
@@ -48,7 +54,6 @@ class UserInformationTest(TestCase):
             'avatar' : avatar,
             'mode': 'INSERT'
         }
-        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
         response = self.client.post(url, data=data_user, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
@@ -62,13 +67,64 @@ class UserInformationTest(TestCase):
             'avatar' : avatar,
             'mode': 'UPDATE'
         }
-        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
         response = self.client.post(url, data=data_user, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
         # GET - get user information
-        url = reverse('v1_user_information')
-        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+        url = reverse('v1_user_information')  
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 
+
+
+
+
+class UserMobileTest(TestCase):
+    def create_user(self, user_data):
+        User.objects.create_user(
+            username=user_data['username'],
+            password=user_data['password'])
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.jwt_data = {
+            'username': 'AmirAPITest',
+            'password': 'Amir123Test',
+        }
+        self.create_user(self.jwt_data)
+
+    @override_settings(USE_TZ=False)
+    def test_mobile_user(self):
+        # generate token
+        url = reverse('token_auth')
+        response = self.client.post(url, data=self.jwt_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        token = response.data['token']
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+
+        # POST - create the mobile phone
+        url = reverse('v1_user_mobile')
+        mobile_data = {
+            "mobile": "09203176164"
+        }
+        response = self.client.post(url, data=mobile_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        mobile_id = response.data['id'] 
+
+        # GET - get list user mobile
+        url = reverse('v1_user_mobile')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        # GET - get the one mobile phone
+        url = reverse('v1_user_mobile_detail', kwargs={'pk':mobile_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        # PUT - update the mobile information
+        url = reverse('v1_user_mobile_detail', kwargs={'pk':mobile_id})
+        response = self.client.put(url, data=mobile_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        
