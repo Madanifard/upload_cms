@@ -57,7 +57,9 @@ ROOT_URLCONF = 'upload_cms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,4 +145,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# for upload media file
 MEDIA_ROOT = BASE_DIR / "uploads"
+
+# for css and js file
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
