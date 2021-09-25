@@ -1,5 +1,5 @@
 from .models import Address, SecurityQuestions, Information, Mobiles
-
+from django.contrib.auth.models import User
 
 def get_user_security_questions(user_id):
     user_questions = SecurityQuestions.objects.filter(user_id=user_id)
@@ -66,6 +66,21 @@ def get_user_address(user_id, address_id):
         output = {
             'status': False,
             'message': "data not found"
+        }
+    finally:
+        return output
+
+def get_list_admin_user():
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'users': User.objects.all(),
+        }
+    except:
+        output = {
+            'status': False,
+            'message': 'not fount user',
         }
     finally:
         return output

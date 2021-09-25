@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from . import views
+from api import views
 
 urlpatterns = [
     path('user_register', views.UserRegister.as_view(), name='user_register'),
