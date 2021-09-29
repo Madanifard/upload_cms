@@ -16,7 +16,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="" class="btn btn-primary">add new user</a>
+                    <a href="{% url 'manage_admin_user' %}" class="btn btn-primary">add new user</a>
                 </div>
                 <div class="panel-body">
 
@@ -35,7 +35,10 @@
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.first_name }}</td>
                                 <td>{{ user.last_name }}</td>
-                                <td>{{ user.id }}</td>
+                                <td>
+                                    <a href="{% url 'manage_admin_user' id=user.id %}" class="btn btn-primary">Edit</a>
+                                    {{ user.id }}
+                                </td>
                             </tr>
                             {% endfor %}
                         </table>

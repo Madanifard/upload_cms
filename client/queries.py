@@ -84,3 +84,18 @@ def get_list_admin_user():
         }
     finally:
         return output
+
+def get_user(id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'user': User.objects.get(pk=id)
+        }
+    except:
+        output = {
+            'status': False,
+            'message': 'not fount user',
+        }
+    finally:
+        return output
