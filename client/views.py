@@ -37,6 +37,7 @@ class AdminUserManage(View):
         })
 
     def post(self, request, id=0):
+        # ? TODO: check this method
         if id != 0:
             user = queries.get_user(id)
             form = forms.UserForm(request.POST, instance=user)
@@ -47,3 +48,16 @@ class AdminUserManage(View):
             form.save()
             
         return redirect(reverse('list_admin_user'))
+
+
+class InformationUser(View):
+    def get(self, request):
+        list_user_information = queries.get_list_user_infromation()
+        if list_user_information['status']:
+            inortmation_list = list_user_information['inortmation_list']
+        else:
+            inortmation_list = []
+        
+        return render(request, 'client/list_information_user.html', {
+            'inortmation_list': inortmation_list
+        })

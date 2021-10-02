@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}List_user_infromation{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">user Settings</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% comment %} <a href="{% url 'manage_admin_user' %}" class="btn btn-primary">add new user</a> {% endcomment %}
+                </div>
+                <div class="panel-body">
+
+                    {% if users is not None %}
+                        <table class="table table-bordered table-hover">
+                            <tr class="wall">
+                                {% comment %} <td>name</td> {% endcomment %}
+                                <td>national_code</td>
+                                <td>avatar</td>
+                                <td>nationality</td>
+                                <td>passport_code</td>  
+                                <td>Settings</td>
+                            </tr>
+                            {% for item in inortmation_list  %}
+                            <tr>
+                                {% comment %} <td>{{ item.user.first_name + ' ' + item.user.last_name }}</td> {% endcomment %}
+                                <td>{{ item.national_code }}</td>
+                                <td>{{ item.avatar }}</td>
+                                <td>{{ item.nationality }}</td>
+                                <td>{{ item.passport_code }}</td>
+                                <td>
+                                    {% comment %} <a href="{% url 'manage_admin_user' id=user.id %}" class="btn btn-primary">Edit</a> {% endcomment %}
+                                    {{ item.id }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% else %}
+                        <h1>NOT FOUND USER</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+</div
+{% endblock content %}

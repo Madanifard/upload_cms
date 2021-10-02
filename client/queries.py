@@ -99,3 +99,18 @@ def get_user(id):
         }
     finally:
         return output
+    
+def get_list_user_infromation():
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'inortmation_list': Information.objects.all()
+        }
+    except:
+        output = {
+            'status': False,
+            'message': 'Not Fount Data'
+        }
+    finally:
+        return output
