@@ -15,49 +15,41 @@ class AdminUserList(View):
             'users': users,
         })
 
-class AdminUserManage(View):
-    def get(self, request, id=0):
-        if id != 0:
-            # Update mode 
-            user = queries.get_user(id)
-            if user['status']:
-                user = user['user']
-                form = forms.UserForm(instance=user)
-            else:
-                # not found any user
-                return redirect(reverse('manage_admin_user'))
+class InformationUserManage(View):
+    def get(self, request, user_id):
+        infromation_user = queries.get_user_information(user_id)
+        if infromation_user['status']:
+            form = forms.InformationUser(instance=infromation_user['information'])
+            is_edit = True
         else:
-            # create new User
-            form = forms.UserForm()
-            id = 0
+            form = forms.InformationUser()
+            is_edit = False
         
-        return render(request, 'client/admin_user_manage.html', {
-            'form' : form,
-            'id': id,
+        return render(request, 'client/information_user_manage.html', {
+            'form': form,
+            'is_edit': is_edit,
+            'user_id': user_id,
         })
-
-    def post(self, request, id=0):
-        # ? TODO: check this method
-        if id != 0:
-            user = queries.get_user(id)
-            form = forms.UserForm(request.POST, instance=user)
+            
+            
+    def post(self, request, user_id):
+        infromation_user = queries.get_user_information(user_id)
+        if infromation_user['status']:
+            form = forms.InformationUser(
+                request.POST,
+                request.FILES,
+                instance=infromation_user['information'])
+            is_edit = True
         else:
-            form = forms.UserForm(request.POST) 
-
+            form = forms.InformationUser(request.POST, request.FILES)
+            is_edit = False
+        
         if form.is_valid():
             form.save()
-            
-        return redirect(reverse('list_admin_user'))
-
-
-class InformationUser(View):
-    def get(self, request):
-        list_user_information = queries.get_list_user_infromation()
-        if list_user_information['status']:
-            inortmation_list = list_user_information['inortmation_list']
+            return redirect(reverse('list_admin_user'))
         else:
-            inortmation_list = []
-        
-        return render(request, 'client/list_information_user.html', {
-            'inortmation_list': inortmation_list
+            return render(request, 'client/information_user_manage.html', {
+            'form': form,
+            'is_edit': is_edit,
+            'user_id': user_id,
         })
