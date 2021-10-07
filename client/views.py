@@ -17,6 +17,7 @@ class AdminUserList(View):
 
 class InformationUserManage(View):
     def get(self, request, user_id):
+        queries.check_exists_user(user_id)
         infromation_user = queries.get_user_information(user_id)
         if infromation_user['status']:
             form = forms.InformationUser(instance=infromation_user['information'])
@@ -25,6 +26,8 @@ class InformationUserManage(View):
             form = forms.InformationUser()
             is_edit = False
         
+        ## form.fields['national_code'].initial = 'testssssssss'
+
         return render(request, 'client/information_user_manage.html', {
             'form': form,
             'is_edit': is_edit,

@@ -14,6 +14,7 @@ class Information(models.Model):
 
 class Mobiles(models.Model):
     user = models.ForeignKey(User, related_name='user_mobile', on_delete=CASCADE)
+    information = models.ForeignKey(Information, related_name='information_mobile', on_delete=CASCADE)
     mobile = models.CharField(max_length=30)
     sms_code = models.CharField(max_length=10, blank=True, default=None)
     date_sent = models.DateTimeField(blank=True, default=None)

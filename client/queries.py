@@ -1,5 +1,7 @@
+from django.http.response import Http404
 from .models import Address, SecurityQuestions, Information, Mobiles
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 def get_user_security_questions(user_id):
     user_questions = SecurityQuestions.objects.filter(user_id=user_id)
@@ -114,3 +116,6 @@ def get_list_user_infromation():
         }
     finally:
         return output
+    
+def check_exists_user(user_id):
+    get_object_or_404(User, pk=user_id)
