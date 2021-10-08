@@ -1,3 +1,4 @@
+from django.contrib.auth import models
 from django.http.response import Http404
 from .models import Address, SecurityQuestions, Information, Mobiles
 from django.contrib.auth.models import User
@@ -119,3 +120,27 @@ def get_list_user_infromation():
     
 def check_exists_user(user_id):
     get_object_or_404(User, pk=user_id)
+    
+def user_details(user_id):
+    output = {}
+    try:
+        user_detail = User.objects.select_related().get(pk=user_id)
+        information = user_detail.user_information
+        mobiles = user_detail.user_mobile
+        address = user_detail.user_address
+        squrity_questions = user_detail.user_security_questions
+        output = {
+            'status': True,
+            'user': user_detail,
+            'information': information,
+            'mobiles': mobiles,
+            'address': address,
+            'squrity_questions': squrity_questions,
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': ex
+        }
+    finally:
+        return output

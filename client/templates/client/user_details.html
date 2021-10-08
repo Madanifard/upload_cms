@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+
+{% block title %}user detail{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">See Detail User</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <div class="col-lg-12">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    {% if status %}
+                        <div>
+                        <!--User-->
+                        <h4>User</h4>
+                            <table class="table table-bordered table-hover">
+                                <tr>
+                                    <td>{{ user.first_name }}</td>
+                                    <td>{{ user.last_name }}</td>
+                                    <td>{{ user.email }}</a>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                        <p>
+                        can assess data like this:
+                        {{ user.user_information.national_code }}
+                        </p>
+                        <hr>
+                        <div>
+                            <!--information-->
+                            <h4>information</h4>
+                            <a href="{% url 'infromation_user_manage' user_id=user.id %}" class="btn btn-info">Manage info</a>
+                            <table class="table table-bordered table-hover">
+                                <tr>
+                                    <td>{{ information.national_code }}</td>
+                                    <td>
+                                        <img scr="{{ information.avatar.url }}" />
+                                    </td>
+                                    <td>{{ information.nationality }}</td>
+                                    <td>{{ information.nationality }}</td>
+                                    <td>{{ information.passport_code }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                        <div>
+                            <!--mobiles-->
+                            <h4>mobiles</h4>
+                                <tabel class="table table-bordered table-hover">
+                                    {% for mobile in mobiles.all  %}
+                                        <tr>
+                                            <td>{{ mobile.mobile}}</td>
+                                            <td>{{ mobile.verified }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tabel>
+                        </div>
+                        <hr>
+                        <div>
+                            <!--address-->
+                            <h4>address</h4>
+                            <tabel class="table table-bordered table-hover">
+                                {% for addres in address.all  %}
+                                    <tr>
+                                        <td>{{ addres.directions}}</td>
+                                        <td>{{ addres.postal_code }}</td>
+                                        <td>{{ addres.phone }}</td>
+                                        <td>({{ addres.latitude }}  , {{ addres.longitude }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tabel>
+                        </div>
+                        <hr>
+                        <div>
+                            <!--squrity_questions-->
+                            <h4>squrity_questions</h4>
+                            <tabel class="table table-bordered table-hover">
+                                {% for sequrity in squrity_questions.all  %}
+                                    <tr>
+                                        <td>{{ sequrity.question}}</td>
+                                        <td>{{ sequrity.answer }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tabel>
+                        </div>
+                    {% else %}
+                        <h1>{{ message }}</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

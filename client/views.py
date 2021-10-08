@@ -15,6 +15,25 @@ class AdminUserList(View):
             'users': users,
         })
 
+class UserDetails(View):
+    def get(self, request, user_id):
+        queries.check_exists_user(user_id)
+        user_detail = queries.user_details(user_id)
+        if user_detail['status']:
+            return render(request, 'client/user_details.html', {
+                'status': user_detail['status'],
+                'user': user_detail['user'],
+                'information': user_detail['information'],
+                'mobiles': user_detail['mobiles'],
+                'address': user_detail['address'],
+                'squrity_questions': user_detail['squrity_questions'],
+            })
+        else:
+            return render(request, 'client/user_details.html', {
+                'status': user_detail['status'],
+                'message': user_detail['message'],
+            })
+
 class InformationUserManage(View):
     def get(self, request, user_id):
         queries.check_exists_user(user_id)
@@ -49,10 +68,10 @@ class InformationUserManage(View):
         
         if form.is_valid():
             form.save()
-            return redirect(reverse('list_admin_user'))
+            return redirect(reverse('user_detail', args=[user_id]))
         else:
             return render(request, 'client/information_user_manage.html', {
-            'form': form,
-            'is_edit': is_edit,
-            'user_id': user_id,
-        })
+                'form': form,
+                'is_edit': is_edit,
+                'user_id': user_id,
+            })
