@@ -121,3 +121,44 @@ class MobileUserManage(View):
                 'user_id': user_id,
                 'mobile_id': mobile_id,
             })
+            
+class AddressManagement(View):
+    def get(self, request, user_id, address_id=0):
+        queries.check_exists_user(user_id)
+        is_edit = False
+        if address_id:
+            address = queries.get_address_user(address_id)
+            if address['status']:
+                form = forms.AddressUser(instance=address['address'])
+                is_edit = True
+            else:
+                form = forms.AddressUser()
+        else:
+            form = forms.AddressUser()
+            
+        return render(request, 'client/address_user_manage.html', {
+            'form': form,
+            'is_edit': is_edit,
+            'user_id': user_id,
+            'address_id': address_id,
+        })
+    
+    def post(self, request, user_id=0, address_id=0):
+        address = queries.get_address_user(address_id)
+        if address['status']:
+            form = forms.AddressUser(request.POST, instance=address['address'])
+            is_edit = True
+        else:
+            form = forms.AddressUser(request.POST)
+            is_edit = False
+        
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('user_detail', args=[user_id]))
+        else:
+            return render(request, 'client/address_user_manage.html', {
+                'form': form,
+                'is_edit': is_edit,
+                'user_id': user_id,
+                'address_id': address_id,
+            })

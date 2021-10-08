@@ -71,16 +71,20 @@
                         <div>
                             <!--address-->
                             <h4>address</h4>
-                            <tabel class="table table-bordered table-hover">
+                            <a href="{% url 'address_user_manage' user_id=user.id address_id=0 %}" class="btn btn-primary">Add Address</a>
+                            <table class="table table-bordered table-hover">
                                 {% for addres in address.all  %}
                                     <tr>
                                         <td>{{ addres.directions}}</td>
                                         <td>{{ addres.postal_code }}</td>
                                         <td>{{ addres.phone }}</td>
-                                        <td>({{ addres.latitude }}  , {{ addres.longitude }}</td>
+                                        <td>({{ addres.latitude }}  , {{ addres.longitude }})</td>
+                                        <td>
+                                        <a href="{% url 'address_user_manage' user_id=user.id address_id=addres.id %}" class="btn btn-warning">Edit Address</a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
-                            </tabel>
+                            </table>
                         </div>
                         <hr>
                         <div>

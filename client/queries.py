@@ -159,3 +159,18 @@ def get_mobile_user(mobile_id):
         }
     finally:
         return output
+
+def get_address_user(address_id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'address': Address.objects.get(id=address_id)
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': 'Address not Found'
+        }
+    finally:
+        return output

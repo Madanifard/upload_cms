@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}Manage Address User{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="row">
+        <div class="col-lg-12">
+            {% if is_edit %}
+                <h1>Edit the Address Info</h1>
+            {% else %}
+                <h1>Create the new Address</h1>
+            {% endif %}
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class='panel-heading'>
+                <p>manage Address</p>
+            </div>
+            <div class="panel-body">
+                <form action="{% url 'address_user_manage' user_id=user_id address_id=address_id %}" method="POST">
+                    {% csrf_token %}
+                    <table class="table table-bordered table-hover">
+
+                        {% for item in form %}
+                        <tr>
+                            <td>
+                                {{ item.label_tag }}
+                                <br>
+                                {{ item }}
+                                <br>
+                                {{ item.errors }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>
+                                <button class="btn btn-success">submit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

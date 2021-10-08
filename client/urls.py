@@ -8,7 +8,8 @@ urlpatterns = [
     path('list-admin-user/', views.AdminUserList.as_view(), name='list_admin_user'),
     path('user-detail/<int:user_id>', views.UserDetails.as_view(), name='user_detail'),
     path('infromation-user-manage/<int:user_id>', views.InformationUserManage.as_view(), name='infromation_user_manage'),
-    path('mobile-user-manage/<int:user_id>/<int:mobile_id>', views.MobileUserManage.as_view(), name='mobile_user_manage')
+    path('mobile-user-manage/<int:user_id>/<int:mobile_id>', views.MobileUserManage.as_view(), name='mobile_user_manage'),
+    path('address-user-manage/<int:user_id>/<int:address_id>', views.AddressManagement.as_view(), name='address_user_manage'),
 ]
 
 if settings.DEBUG:
