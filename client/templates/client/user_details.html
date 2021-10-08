@@ -54,14 +54,18 @@
                         <div>
                             <!--mobiles-->
                             <h4>mobiles</h4>
-                                <tabel class="table table-bordered table-hover">
+                                <a href="{% url 'mobile_user_manage' user_id=user.id mobile_id=0 %}" class="btn btn-primary">Add Mobile</a>
+                                <table class="table table-bordered table-hover">
                                     {% for mobile in mobiles.all  %}
                                         <tr>
                                             <td>{{ mobile.mobile}}</td>
                                             <td>{{ mobile.verified }}</td>
+                                            <td>
+                                            <a href="{% url 'mobile_user_manage' user_id=user.id mobile_id=mobile.id %}" class="btn btn-warning">Edit Mobile</a>
+                                            </td>
                                         </tr>
                                     {% endfor %}
-                                </tabel>
+                                </table>
                         </div>
                         <hr>
                         <div>

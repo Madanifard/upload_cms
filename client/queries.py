@@ -144,3 +144,18 @@ def user_details(user_id):
         }
     finally:
         return output
+
+def get_mobile_user(mobile_id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'mobile': Mobiles.objects.get(id=mobile_id)
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': 'Mobile not Found'
+        }
+    finally:
+        return output

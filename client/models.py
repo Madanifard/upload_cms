@@ -10,6 +10,9 @@ class Information(models.Model):
     avatar = models.ImageField(upload_to='avatars')
     nationality = models.CharField(max_length=50)
     passport_code = models.CharField(max_length=50)
+    
+    def __str__(self) -> str:
+        return self.national_code
 
 
 class Mobiles(models.Model):

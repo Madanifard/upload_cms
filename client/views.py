@@ -1,3 +1,5 @@
+from datetime import datetime
+import random
 from django.http.response import HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.views import View
@@ -74,4 +76,48 @@ class InformationUserManage(View):
                 'form': form,
                 'is_edit': is_edit,
                 'user_id': user_id,
+            })
+
+class MobileUserManage(View):
+    def get(self, request, user_id=0, mobile_id=0):
+        queries.check_exists_user(user_id)
+        is_edit = False
+        if mobile_id:
+            mobile = queries.get_mobile_user(mobile_id)
+            if mobile['status']:
+                form = forms.MobileUser(instance=mobile['mobile'])
+                is_edit = True
+            else:
+                form = forms.MobileUser()
+        else:
+            form = forms.MobileUser()
+        
+        form.fields['date_sent'].initial = datetime.today()
+        form.fields['sms_code'].initial = random.sample(range(1111, 9999), 1)[0]
+        
+        return render(request, 'client/mobile_user_manage.html', {
+            'form': form,
+            'is_edit': is_edit,
+            'user_id': user_id,
+            'mobile_id': mobile_id,
+        })
+        
+    def post(self, request, user_id=0, mobile_id=0):
+        mobile = queries.get_mobile_user(mobile_id)
+        if mobile['status']:
+            form = forms.MobileUser(request.POST, instance=mobile['mobile'])
+            is_edit = True
+        else:
+            form = forms.MobileUser(request.POST)
+            is_edit = False
+        
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('user_detail', args=[user_id]))
+        else:
+            return render(request, 'client/mobile_user_manage.html', {
+                'form': form,
+                'is_edit': is_edit,
+                'user_id': user_id,
+                'mobile_id': mobile_id,
             })
