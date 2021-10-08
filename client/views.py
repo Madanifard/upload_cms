@@ -162,3 +162,44 @@ class AddressManagement(View):
                 'user_id': user_id,
                 'address_id': address_id,
             })
+            
+class SqurityQuestionManagement(View):
+    def get(self, request, user_id, question_id=0):
+        queries.check_exists_user(user_id)
+        is_edit = False
+        if question_id:
+            question = queries.get_squrity_question(question_id)
+            if question['status']:
+                form = forms.SecurityQuestion(instance=question['question'])
+                is_edit = True
+            else:
+                form = forms.SecurityQuestion()
+        else:
+            form = forms.SecurityQuestion()
+            
+        return render(request, 'client/sequrity_question_manage.html', {
+            'form': form,
+            'is_edit': is_edit,
+            'user_id': user_id,
+            'question_id': question_id,
+        })
+    
+    def post(self, request, user_id=0, question_id=0):
+        question = queries.get_squrity_question(question_id)
+        if question['status']:
+            form = forms.SecurityQuestion(request.POST, instance=question['question'])
+            is_edit = True
+        else:
+            form = forms.SecurityQuestion(request.POST)
+            is_edit = False
+        
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('user_detail', args=[user_id]))
+        else:
+            return render(request, 'client/sequrity_question_manage.html', {
+                'form': form,
+                'is_edit': is_edit,
+                'user_id': user_id,
+                'question_id': question_id,
+            })

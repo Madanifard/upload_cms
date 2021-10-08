@@ -174,3 +174,18 @@ def get_address_user(address_id):
         }
     finally:
         return output
+    
+def get_squrity_question(question_id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'question': SecurityQuestions.objects.get(id=question_id)
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': 'SecurityQuestions not Found'
+        }
+    finally:
+        return output

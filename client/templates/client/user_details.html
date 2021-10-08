@@ -90,14 +90,18 @@
                         <div>
                             <!--squrity_questions-->
                             <h4>squrity_questions</h4>
-                            <tabel class="table table-bordered table-hover">
+                            <a href="{% url 'sequrity_question_manage' user_id=user.id question_id=0 %}" class="btn btn-primary">Add Sequrity Qestion</a>
+                            <table class="table table-bordered table-hover">
                                 {% for sequrity in squrity_questions.all  %}
                                     <tr>
                                         <td>{{ sequrity.question}}</td>
                                         <td>{{ sequrity.answer }}</td>
+                                        <td>
+                                        <a href="{% url 'sequrity_question_manage' user_id=user.id question_id=sequrity.id %}" class="btn btn-warning">Edit Sequrity Qestion</a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
-                            </tabel>
+                            </table>
                         </div>
                     {% else %}
                         <h1>{{ message }}</h1>
