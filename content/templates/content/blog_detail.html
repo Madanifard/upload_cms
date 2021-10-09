@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+{% block title %}post detail{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">See Detail post</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <div class="col-lg-12">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <a href="{% url 'post_manage' id=post.id %}" class="btn btn-warning">Edit POST</a>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <td>
+                                {{ post.title }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.summery }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.text }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.descripe_seo }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.key_word_seo }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.image.url }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.showable }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.created_at }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ post.updated_at }}
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -31,3 +31,33 @@ def check_exits_post(id):
 
 def check_exists_comment_post(post_id, comment_id):
     return Post.objects.filter(id=post_id).filter(content_post_comment__id=comment_id).exists()
+
+def get_all_post():
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'posts': Post.objects.all()
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': ex
+        }
+    finally:
+        return output
+
+def get_post_id(id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'post': Post.objects.get(id=id)
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': ex
+        }
+    finally:
+        return output
