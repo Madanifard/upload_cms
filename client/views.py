@@ -33,7 +33,7 @@ class UserDetails(View):
         else:
             return render(request, 'client/user_details.html', {
                 'status': user_detail['status'],
-                'message': user_detail['message'],
+                'message': user_deta    il['message'],
             })
 
 class InformationUserManage(View):

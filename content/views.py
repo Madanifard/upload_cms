@@ -66,3 +66,54 @@ class PostManage(View):
                 'is_edit': is_edit,
                 'id': id,
             })
+            
+class CommentManage(View):
+    def get(self, request, post_id, comment_id):
+        exist_post = queries.check_exits_post(post_id)
+        if exist_post:
+            comment = queries.get_comment(comment_id)
+            if comment['status']:
+                # Edit comment
+                form = forms.CommentForm(instance=comment['comment'])
+                is_edit = True
+            else:
+                # create the new Comment
+                form = forms.CommentForm()
+                is_edit = False
+                
+            return render(request, 'conetnt/comment_manage.html', {
+                'form': form,
+                'is_edit': is_edit,
+                'post_id': post_id,
+                'comment_id': comment_id,
+            })
+        else:
+            # not found post
+            return redirect(reverse('list_post'))
+    
+    def post(self, request, post_id, comment_id):
+        exist_post = queries.check_exits_post(post_id)
+        if exist_post:
+            comment = queries.get_comment(comment_id)
+            if comment['status']:
+                # Update Comment
+                form = forms.CommentForm(request.POST, instance=comment['comment'])
+                is_edit = True
+            else:
+                # Insert Comment
+                form = forms.CommentForm(request.POST)
+                is_edit = False
+            
+            if form.is_valid():
+                form.save()
+                return redirect(reverse('post_detail', args=[post_id]))
+            else:
+                return render(request, 'conetnt/comment_manage.html', {
+                    'form': form,
+                    'is_edit': is_edit,
+                    'post_id': post_id,
+                    'comment_id': comment_id,
+                })
+        else:
+            # not found post
+            return redirect(reverse('list_post'))

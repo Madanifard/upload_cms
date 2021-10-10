@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from .models import Post, PostComment
 
 
+
 def get_user_list_post(user_id):
     return Post.objects.filter(user_id=user_id)
 
@@ -58,6 +59,21 @@ def get_post_id(id):
         output = {
             'status': False,
             'message': ex
+        }
+    finally:
+        return output
+    
+def get_comment(id):
+    output = {}
+    try:
+        output = {
+            'status': True,
+            'comment': PostComment.objects.get(pk=id)
+        }
+    except Exception as ex:
+        output = {
+            'status': False,
+            'message': 'Not Found Comment'
         }
     finally:
         return output
