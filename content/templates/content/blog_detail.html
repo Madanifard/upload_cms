@@ -12,10 +12,10 @@
         </div>
 
         <div class="col-lg-12">
-            <div class="panel panel-green">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <a href="{% url 'post_manage' id=post.id %}" class="btn btn-warning">Edit POST</a>
-                    <a href="{% url 'comment_post_manage' post_id=post.id comment_id=0  %}" class="btn btn-green">create new Comment</a>
+                    <a href="{% url 'comment_post_manage' post_id=post.id comment_id=0  %}" class="btn btn-sucess">create new Comment</a>
                     
                 </div>
                 <div class="panel-body">
@@ -67,7 +67,42 @@
                         </tr>
                     </table>
                     <hr>
-
+                    {% for comment in post.content_post_comment.all %}
+                        {{ comment.id }}
+                        <div>
+                            <table class="table table-bordered table-hover">
+                                <tr>
+                                    <td>subject</td>
+                                    <td>{{ comment.subject }}</td>
+                                </tr>
+                                <tr>
+                                    <td>email</td>
+                                    <td>{{ comment.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>{{ comment.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>text</td>
+                                    <td>{{ comment.text }}</td>
+                                </tr>
+                                <tr>
+                                    <td>replay_id</td>
+                                    <td>{{ comment.replay_id }}</td>
+                                </tr>
+                                <tr>
+                                    <td>verified</td>
+                                    <td>{{ comment.verified }}</td>
+                                </tr>
+                                <tr>
+                                    <td>created_at</td>
+                                    <td>{{ comment.created_at }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endfor %}
+                    
                 </div>
             </div>
         </div>

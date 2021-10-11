@@ -68,7 +68,7 @@ class PostManage(View):
             })
             
 class CommentManage(View):
-    def get(self, request, post_id, comment_id):
+    def get(self, request, post_id, comment_id=0):
         exist_post = queries.check_exits_post(post_id)
         if exist_post:
             comment = queries.get_comment(comment_id)
@@ -81,7 +81,7 @@ class CommentManage(View):
                 form = forms.CommentForm()
                 is_edit = False
                 
-            return render(request, 'conetnt/comment_manage.html', {
+            return render(request, 'content/comment_manage.html', {
                 'form': form,
                 'is_edit': is_edit,
                 'post_id': post_id,

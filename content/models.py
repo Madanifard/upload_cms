@@ -14,6 +14,9 @@ class Post(models.Model):
     showable = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True)
+    
+    def __str__(self) -> str:
+        return self.title
 
 class PostComment(models.Model):
     post = models.ForeignKey(Post, on_delete=CASCADE, related_name='content_post_comment')
