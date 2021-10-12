@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import CASCADE
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.urls import reverse
 
 
 class Information(models.Model):
@@ -13,6 +14,10 @@ class Information(models.Model):
     
     def __str__(self) -> str:
         return self.national_code
+    
+    # def get_absolute_url(self):
+        # return reverse("information_detail", kwargs={"pk": self.pk})
+    
 
 
 class Mobiles(models.Model):
@@ -24,6 +29,8 @@ class Mobiles(models.Model):
     count_sent = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(3)])
     verified = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return f"{self.mobile} ({self.user.username})"
 
 class Address(models.Model):
     user = models.ForeignKey(User, related_name='user_address', on_delete=CASCADE)
@@ -32,9 +39,15 @@ class Address(models.Model):
     phone = models.CharField(max_length=30)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    
+    def __str__(self) -> str:
+        return f"{self.postal_code} ({self.user.first_name} {self.user.last_name})"
 
 
 class SecurityQuestions(models.Model):
     user = models.ForeignKey(User, related_name='user_security_questions', on_delete=CASCADE)
     question = models.TextField()
     answer = models.TextField()
+    
+    def __str__(self) -> str:
+        return f"{self.user.first_name} {self.user.last_name}"
