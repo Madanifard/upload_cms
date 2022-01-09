@@ -11,6 +11,7 @@ urlpatterns = [
     path('mobile-user-manage/<int:user_id>/<int:mobile_id>', views.MobileUserManage.as_view(), name='mobile_user_manage'),
     path('address-user-manage/<int:user_id>/<int:address_id>', views.AddressManagement.as_view(), name='address_user_manage'),
     path('sequrity-question-manage/<int:user_id>/<int:question_id>', views.SqurityQuestionManagement.as_view(), name='sequrity_question_manage'),
+    path('test_query', views.test_query, name='test_query'),
 ]
 
 if settings.DEBUG:

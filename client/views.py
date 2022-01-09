@@ -1,10 +1,12 @@
 from datetime import datetime
 import random
-from django.http.response import HttpResponseNotFound
+from django.http.response import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.views import View
 from . import forms, queries
 from django.urls import reverse
+from . import train_queries
+
 
 class AdminUserList(View):
     def get(self, request):
@@ -203,3 +205,7 @@ class SqurityQuestionManagement(View):
                 'user_id': user_id,
                 'question_id': question_id,
             })
+
+
+def test_query(request):
+    return HttpResponse(train_queries.create_user())
